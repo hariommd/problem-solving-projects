@@ -149,8 +149,11 @@
 
         // Creating Ladder List
         let ladderList = {
-            4:11,
-            6:96
+            4:41,
+            6:96,
+            7:87,
+            28:90,
+
         };
 
         //Checking if Ladder is Present on Current Move
@@ -164,43 +167,40 @@
         };
 
         //Decorating Ladder Presence
-        const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
         for (const [key, value] of Object.entries(ladderList)) {
-            let color = genRanHex(6)
-            // document.getElementById(`box-item${key}`).style.backgroundColor=`#${color}`;
-            // document.getElementById(`box-item${value}`).style.backgroundColor=`#${color}`;
-            console.log("This info for>>>",key,document.getElementById(`box-item${key}`).getBoundingClientRect(),document.getElementById(`box-item${value}`).getBoundingClientRect())
-            let {x,y,height} = document.getElementById(`box-item${key}`).getBoundingClientRect();
-            //let {y} = document.getElementById(`box-item${value}`).getBoundingClientRect();
+            let ladderUpPoint = document.getElementById(`box-item${value}`).getBoundingClientRect();
+            let ladderDownPoint = document.getElementById(`box-item${key}`).getBoundingClientRect();
 
-            let ladderTopHeight = document.getElementById(`box-item${value}`).getBoundingClientRect().height;
-            // let height = Math.abs(y-x);
-            drawLadder(key,x,y,height)
-            // <svg width="500" height="500"><line x1="50" y1="50" x2="350" y2="50" stroke="red"/></svg>
+            let top = ladderUpPoint.top + ladderUpPoint.height - 30
+            let height = ladderDownPoint.top - ladderUpPoint.height - ladderUpPoint.top + 25
+            let left = ladderUpPoint['x'] + 8
+            let skew = null;
+            if(ladderUpPoint['x']!==ladderDownPoint['x']){
+                skew = 45;
+                console.log(skew)
+            }
+
+            console.log("Ladder Up",ladderUpPoint)
+            console.log("Ladder Down",ladderDownPoint)
+
+            drawLadder(left,top,height,skew)
         };
 
         //Ladder Drawer
-        function drawLadder(key,x,y,height){
+        function drawLadder(left,top,height,skew){
             
             let svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
             let svgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
 
+            svgContainer.setAttribute('height',height);
+            svgContainer.setAttribute('width','70px');
+            svgContainer.style.cssText=`position:absolute;left:${left};top:${top};transform:skewX${skew}deg`
 
-            svgContainer.setAttribute("height",y-height);
-            svgContainer.setAttribute("width",50);
-            svgContainer.id=`svgforBox${key}`;
-            svgContainer.style.position="absolute";
-            svgContainer.style.top=height;
-            svgContainer.style.left=x;
+            svgRect.setAttribute('height',height);
+            svgRect.setAttribute('width','70px');
 
-            svgRect.setAttribute("height",y-height);
-            svgRect.setAttribute("width",50);
-            svgRect.setAttribute("stroke", "#f00");
-            svgRect.setAttribute("stroke-width", "5px");
-            svgRect.setAttribute("fill", "transparent");
-
-
-
+            svgRect.style.cssText = `fill:transparent;stroke:#f00;stroke-width:5px;opacity:0.8;`;
+            
             svgContainer.appendChild(svgRect)
             document.getElementsByClassName('snake-ladder-container')[0].appendChild(svgContainer);
         }
