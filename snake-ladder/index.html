@@ -16,7 +16,7 @@
         }
         .snake-ladder-container{
             position: relative;
-            padding: 15px;
+            padding: 2%;
             display: grid;
             min-height: 70vh;
             grid-template-columns: 1fr repeat(9,1fr);
@@ -121,7 +121,7 @@
                 setTimeout(()=>{
                 removePlayerIcon(`box-item${currentMove}`)
                 currentMove+=i;
-                // isLadder(currentMove);
+                isLadder(currentMove);
                 playerMove(`box-item${currentMove}`);
                 setTimeout(()=>{
                     if(currentMove==100){
@@ -147,27 +147,39 @@
             currentBox.removeChild(currentBox.lastChild);  
         }
 
+        // Creating Ladder List
         let ladderList = {
-            1:21,
-            2:31,
-            3:41,
-            4:51,
-            5:61,
-            6:71,
-            
+            4:11,
+            12:24,
+            16:32,
+            17:34
         };
 
+        //Checking if Ladder is Present on Current Move
         function isLadder(id){
             let res = Object.keys(ladderList).filter((item)=>{
                 return item==id;
             });
             console.log(this)
             if(res.length>0){
-                removePlayerIcon(`box-item${currentMove}`)
-                currentMove+=ladderList[id]
-                playerMove(`box-item${ladderList[id]}`);
+                currentMove=ladderList[id]
             }
         };
+
+        //Decorating Ladder Presence
+        const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+        for (const [key, value] of Object.entries(ladderList)) {
+            let color = genRanHex(6)
+            document.getElementById(`box-item${key}`).style.backgroundColor=`#${color}`;
+            document.getElementById(`box-item${value}`).style.backgroundColor=`#${color}`;
+            console.log( document.getElementById(`box-item${value}`).getBoundingClientRect())
+            // <svg width="500" height="500"><line x1="50" y1="50" x2="350" y2="50" stroke="red"/></svg>
+        };
+
+        //Ladder Drawer
+        function drawLadder(){
+            
+        }
     </script>
 </body>
 </html>
