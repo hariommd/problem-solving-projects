@@ -19,8 +19,7 @@
             padding: 15px;
             display: grid;
             min-height: 70vh;
-            grid-template-columns: 1fr repeat(7,1fr);
-           
+            grid-template-columns: 1fr repeat(9,1fr);
             margin: 20px;
         }
         .box-item{
@@ -76,6 +75,12 @@
             width: 20px;
             border-radius: 40px;
         }
+        @media screen and (max-width:767px) {
+            .roll-dice{
+                height: 40px;
+                width: 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -84,7 +89,7 @@
         <div class="snake-ladder-container" id="snake-ladder-container">
            
         </div>
-        <div class="roll-dice" onclick="rollDice()" id="roll-dice">0
+        <div class="roll-dice" onclick="rollDice()" id="roll-dice">1
         </div>
         
     </section>
