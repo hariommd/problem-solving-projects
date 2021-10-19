@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake and Ladder</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background-color: #808080;
+        }
+        h1{
+            text-align: center;
+        }
+        .snake-ladder-container{
+            position: relative;
+            padding: 15px;
+            display: grid;
+            min-height: 70vh;
+            grid-template-columns: 1fr repeat(7,1fr);
+           
+            margin: 20px;
+        }
+        .box-item{
+            position: relative;
+            display: grid;
+            place-items: center;
+            background-color: #808080;
+            color: #fff;
+            border: 1px solid #fff;
+            min-height: 40px;
+        }
+
+        .box-item:nth-child(even){
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #000;
+        }
+        .roll-dice{
+            position: absolute;
+            top: 20%;
+            right:0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            min-height: 30px;
+            padding: 10px;
+            background-color: #f00;
+            color: #fff;
+            border-radius: 15px;
+        }
+        /* .roll-dice span{
+            display: inline-block;
+            height: 5px;
+            width: 5px;
+            background-color: #000;
+            margin: 5px;
+            border-radius: 50%;
+        } */
+        .player-icon{
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #f00;
+            height: 20px;
+            width: 20px;
+            border-radius: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- <h1>Snake and Ladder Game</h1> -->
+    <section class="snake-ladder">
+        <div class="snake-ladder-container" id="snake-ladder-container">
+           
+        </div>
+        <div class="roll-dice" onclick="rollDice()" id="roll-dice">
+        </div>
+        
+    </section>
+    <script>
+        //Accessing Required Elements 
+        let rollDiceContainer = document.getElementById('roll-dice');
+        let boxContainer = document.getElementById('snake-ladder-container');
+        let playerIconContainer =document.getElementById('player-icon');
+
+    
+        //Generating Grid Layout for Structure
+        for(let i=100;i>=0;i--){
+            let boxItem = document.createElement('div');
+            boxItem.classList.add('box-item');
+            boxItem.textContent=i;
+            boxItem.id=`box-item${i}`
+            boxContainer.appendChild(boxItem)
+        }
+
+        //Set Current Move
+        var currentMove = 0;
+        playerMove(`box-item${currentMove}`);
+
+        //To Roll Dice 
+        function rollDice(){
+            let i = Math.ceil(Math.random()*6);
+            rollDiceContainer.innerHTML=i;
+            setTimeout(()=>{
+                removePlayerIcon(`box-item${currentMove}`)
+                currentMove+=i;
+                playerMove(`box-item${currentMove}`);
+                isLadder(currentMove);
+            },500)
+        }
+
+        //Add player icon to Current Position
+        function playerMove(id){
+            let playerIcon = document.createElement('div');
+            playerIcon.classList.add('player-icon')
+            let currentBox = document.getElementById(id);
+            currentBox.appendChild(playerIcon)
+        }
+
+        //Remove player icon from previous Position
+        function removePlayerIcon(id){
+            let currentBox = document.getElementById(id);
+            currentBox.removeChild(currentBox.lastChild);  
+        }
+
+        let ladderList = {
+            1:21,
+            2:31,
+            3:41,
+            4:51,
+            5:61,
+            6:71,
+            
+        };
+
+        function isLadder(id){
+            let res = Object.keys(ladderList).filter((item)=>{
+                return item==id;
+            });
+            if(res.length>0){
+                removePlayerIcon(`box-item${id}`)
+                currentMove+=ladderList[id]
+                playerMove(`box-item${ladderList[id]}`);
+            }
+        };
+    </script>
+</body>
+</html>
