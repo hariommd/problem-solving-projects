@@ -150,9 +150,7 @@
         // Creating Ladder List
         let ladderList = {
             4:11,
-            12:24,
-            16:32,
-            17:34
+            6:96
         };
 
         //Checking if Ladder is Present on Current Move
@@ -160,7 +158,6 @@
             let res = Object.keys(ladderList).filter((item)=>{
                 return item==id;
             });
-            console.log(this)
             if(res.length>0){
                 currentMove=ladderList[id]
             }
@@ -170,15 +167,42 @@
         const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
         for (const [key, value] of Object.entries(ladderList)) {
             let color = genRanHex(6)
-            document.getElementById(`box-item${key}`).style.backgroundColor=`#${color}`;
-            document.getElementById(`box-item${value}`).style.backgroundColor=`#${color}`;
-            console.log( document.getElementById(`box-item${value}`).getBoundingClientRect())
+            // document.getElementById(`box-item${key}`).style.backgroundColor=`#${color}`;
+            // document.getElementById(`box-item${value}`).style.backgroundColor=`#${color}`;
+            console.log("This info for>>>",key,document.getElementById(`box-item${key}`).getBoundingClientRect(),document.getElementById(`box-item${value}`).getBoundingClientRect())
+            let {x,y,height} = document.getElementById(`box-item${key}`).getBoundingClientRect();
+            //let {y} = document.getElementById(`box-item${value}`).getBoundingClientRect();
+
+            let ladderTopHeight = document.getElementById(`box-item${value}`).getBoundingClientRect().height;
+            // let height = Math.abs(y-x);
+            drawLadder(key,x,y,height)
             // <svg width="500" height="500"><line x1="50" y1="50" x2="350" y2="50" stroke="red"/></svg>
         };
 
         //Ladder Drawer
-        function drawLadder(){
+        function drawLadder(key,x,y,height){
             
+            let svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+            let svgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+
+
+            svgContainer.setAttribute("height",y-height);
+            svgContainer.setAttribute("width",50);
+            svgContainer.id=`svgforBox${key}`;
+            svgContainer.style.position="absolute";
+            svgContainer.style.top=height;
+            svgContainer.style.left=x;
+
+            svgRect.setAttribute("height",y-height);
+            svgRect.setAttribute("width",50);
+            svgRect.setAttribute("stroke", "#f00");
+            svgRect.setAttribute("stroke-width", "5px");
+            svgRect.setAttribute("fill", "transparent");
+
+
+
+            svgContainer.appendChild(svgRect)
+            document.getElementsByClassName('snake-ladder-container')[0].appendChild(svgContainer);
         }
     </script>
 </body>
