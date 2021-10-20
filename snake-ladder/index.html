@@ -80,18 +80,30 @@
                 height: 40px;
                 width: 40px;
             }
+        }.info-wrapper{
+            display: flex;
+            justify-content: space-around;
+            color: #f00;
+            font-weight: bold;
+        }
+        .info-wrapper h3:first-child{
+            color: #0f0;
         }
     </style>
 </head>
 <body>
     <!-- <h1>Snake and Ladder Game</h1> -->
     <section class="snake-ladder">
+       
         <div class="snake-ladder-container" id="snake-ladder-container">
            
         </div>
         <div class="roll-dice" onclick="rollDice()" id="roll-dice">1
         </div>
-        
+       <div class="info-wrapper">
+           <h3>Green Line Indicates Ladder </h3>
+           <h3>Red Line Indicates Snakes</h3>
+       </div>
     </section>
     <script>
         //Accessing Required Elements 
@@ -110,6 +122,7 @@
         }
 
         //Set Current Move
+        const playerName =  "Player 1";
         var currentMove = 0;
         playerMove(`box-item${currentMove}`);
 
@@ -122,13 +135,17 @@
                 removePlayerIcon(`box-item${currentMove}`)
                 currentMove+=i;
                 isLadder(currentMove);
+                isSnake(currentMove);
                 playerMove(`box-item${currentMove}`);
                 setTimeout(()=>{
                     if(currentMove==100){
-                    alert("Congratulations !!")
+                    alert(`Congratulations ${playerName} !!`)
+                    removePlayerIcon(`box-item${currentMove}`)
+                    currentMove=0;
+                    playerMove(`box-item${currentMove}`);
                 }
                 },500)
-            },500)
+            },1000)
             }
             
         }
@@ -149,10 +166,19 @@
 
         // Creating Ladder List
         let ladderList = {
-            2:36,
-            3:52,
+           2:44,
+           5:52,
+           27:65,
+           50:89,
 
         };
+
+        //Creating Snake List
+        let snakeList ={
+            87:9,
+            96:4,
+            80:7,
+        }
 
         //Checking if Ladder is Present on Current Move
         function isLadder(id){
@@ -164,10 +190,71 @@
             }
         };
 
+         //Checking if Snake is Present on Current Move
+        function isSnake(id){
+            let res = Object.keys(snakeList).filter((item)=>{
+                return item==id;
+            });
+            if(res.length>0){
+                currentMove=snakeList[id]
+            }
+        };
+
         //Decorating Ladder Presence
         for (const [key, value] of Object.entries(ladderList)) {
             let ladderUpPoint = document.getElementById(`box-item${value}`).getBoundingClientRect();
             let ladderDownPoint = document.getElementById(`box-item${key}`).getBoundingClientRect();
+
+            let top = ladderUpPoint.y + ladderUpPoint.height - 30;
+
+            let leftUp = ladderUpPoint['x'];
+            let topUp = ladderUpPoint['y'];
+
+            let leftDown = ladderDownPoint['x'];
+            let topDown = ladderDownPoint['y'];
+
+            let downPointRight = ladderDownPoint['right'];
+            let upPointRight = ladderUpPoint['right'];
+
+            let containerWidth = Math.abs(upPointRight-downPointRight) || 90;
+            let containerHeight = Math.abs(topDown-topUp);
+            let containerLeft;
+            
+            if(leftDown>leftUp) {
+                    containerLeft = leftUp;
+                    console.log("Container Up",containerLeft)
+                    x1=0;
+                    x2=containerWidth;
+                    y1=0;
+                    y2=containerHeight;
+                }
+            else{
+                    containerLeft = leftDown;
+                    console.log("Container Down",containerLeft)
+                    x1=containerWidth;
+                    x2=0;
+                    y1=0;
+                    y2=containerHeight;
+                };
+
+            // console.log("Ladder Up",ladderUpPoint)
+            // console.log("Ladder Down",ladderDownPoint)
+
+            // console.log("LeftUp",leftUp);
+            // console.log("leftDown",leftDown);
+            // console.log("topUp",topUp);
+            // console.log("topDown",topDown);
+
+            // console.log("Container Height",containerHeight)
+
+            drawLadder(containerWidth,containerHeight,containerLeft,x1,y1,x2,y2,topUp);
+
+        };
+        
+        //Decorating Snake Presence
+        for (const [key, value] of Object.entries(snakeList)) {
+            let ladderUpPoint = document.getElementById(`box-item${key}`).getBoundingClientRect();
+            let ladderDownPoint = document.getElementById(`box-item${value}`).getBoundingClientRect();
 
             let top = ladderUpPoint.y + ladderUpPoint.height - 30;
 
@@ -211,7 +298,7 @@
 
             // console.log("Container Height",containerHeight)
 
-            drawLadder(containerWidth,containerHeight,containerLeft,x1,y1,x2,y2,topUp);
+            drawSnake(containerWidth,containerHeight,containerLeft,x1,y1,x2,y2,topUp);
 
         };
 
@@ -232,6 +319,28 @@
             svgLine.setAttribute('y2',y2);
             
             svgLine.style.cssText = `stroke:rgb(0,255,0);stroke-width:5`;
+            
+            svgContainer.appendChild(svgLine)
+            document.getElementsByClassName('snake-ladder-container')[0].appendChild(svgContainer);
+        }
+
+        //Snake Drawer
+        function drawSnake(containerWidth,containerHeight,containerLeft,x1,y1,x2,y2,topUp){
+            
+            let svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+            let svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+
+            svgContainer.setAttribute('height',containerHeight);
+            svgContainer.setAttribute('width',containerWidth);
+
+            svgContainer.style.cssText=`position:absolute;left:${containerLeft};top:${topUp};`
+
+            svgLine.setAttribute('x1',x1);
+            svgLine.setAttribute('y1',y1);
+            svgLine.setAttribute('x2',x2);
+            svgLine.setAttribute('y2',y2);
+            
+            svgLine.style.cssText = `stroke:rgb(255,0,0);stroke-width:5`;
             
             svgContainer.appendChild(svgLine)
             document.getElementsByClassName('snake-ladder-container')[0].appendChild(svgContainer);
