@@ -17,10 +17,12 @@
         .snake-ladder-container{
             position: relative;
             padding: 2%;
+            padding-bottom: 0;
             display: grid;
             min-height: 70vh;
             grid-template-columns: 1fr repeat(9,1fr);
             margin: 20px;
+            margin-bottom: 0;
         }
         .box-item{
             position: relative;
@@ -81,11 +83,18 @@
                 height: 30px;
                 width: 30px;
             }
-        }.info-wrapper{
+        }.info-wrapper,.name-wrapper{
             display: flex;
             justify-content: space-around;
-            color: #f00;
+            color: #fff;
             font-weight: bold;
+        }
+        .info-wrapper h3{
+            color: #f00;
+            margin-bottom:10px;
+        }
+        .name-wrapper h2{
+            margin-bottom:10px;
         }
         .info-wrapper h3:first-child{
             color: #0f0;
@@ -101,6 +110,9 @@
         </div>
         <div class="roll-dice" onclick="rollDice()" id="roll-dice">1
         </div>
+        <div class="name-wrapper">
+            <h2 >Player Name <span id="player-name"></span></h2>
+        </div>
        <div class="info-wrapper">
            <h3>Green Line Indicates Ladder </h3>
            <h3>Red Line Indicates Snakes</h3>
@@ -110,8 +122,8 @@
         //Accessing Required Elements 
         let rollDiceContainer = document.getElementById('roll-dice');
         let boxContainer = document.getElementById('snake-ladder-container');
-        let playerIconContainer =document.getElementById('player-icon');
-
+        let playerIconContainer = document.getElementById('player-icon');
+        let nameContainer = document.getElementById('player-name');
     
         //Generating Grid Layout for Structure
         for(let i=100;i>=0;i--){
@@ -121,9 +133,11 @@
             boxItem.id=`box-item${i}`
             boxContainer.appendChild(boxItem)
         }
+        //Getting & Setting Player Name
+        const playerName =  window.prompt("Enter Your Name !") || "Player 1";
+        nameContainer.innerText=playerName;
 
         //Set Current Move
-        const playerName =  window.prompt("Enter Your Name !") || "Player 1";
         var currentMove = 0;
         playerMove(`box-item${currentMove}`);
 
