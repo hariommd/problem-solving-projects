@@ -149,10 +149,8 @@
 
         // Creating Ladder List
         let ladderList = {
-            4:41,
-            6:96,
-            7:87,
-            28:90,
+            2:36,
+            3:52,
 
         };
 
@@ -171,37 +169,71 @@
             let ladderUpPoint = document.getElementById(`box-item${value}`).getBoundingClientRect();
             let ladderDownPoint = document.getElementById(`box-item${key}`).getBoundingClientRect();
 
-            let top = ladderUpPoint.top + ladderUpPoint.height - 30
-            let height = ladderDownPoint.top - ladderUpPoint.height - ladderUpPoint.top + 25
-            let left = ladderUpPoint['x'] + 8
-            let skew = null;
-            if(ladderUpPoint['x']!==ladderDownPoint['x']){
-                skew = 45;
-                console.log(skew)
-            }
+            let top = ladderUpPoint.y + ladderUpPoint.height - 30;
 
-            console.log("Ladder Up",ladderUpPoint)
-            console.log("Ladder Down",ladderDownPoint)
+            let leftUp = ladderUpPoint['x'];
+            let topUp = ladderUpPoint['y'];
 
-            drawLadder(left,top,height,skew)
+            let leftDown = ladderDownPoint['x'];
+            let topDown = ladderDownPoint['y'];
+
+            let downPointRight = ladderDownPoint['right'];
+            let upPointRight = ladderUpPoint['right'];
+
+            let containerWidth = Math.abs(upPointRight-downPointRight);
+            let containerHeight = Math.abs(topDown-topUp);
+            let containerLeft;
+            
+            if(leftDown>leftUp) {
+                    containerLeft = leftUp;
+                    console.log("Container Up",containerLeft)
+                    x1=0;
+                    x2=containerWidth;
+                    y1=0;
+                    y2=containerHeight;
+                }
+            else{
+                    containerLeft = leftDown;
+                    console.log("Container Down",containerLeft)
+                    x1=containerWidth;
+                    x2=0;
+                    y1=0;
+                    y2=containerHeight;
+                };
+
+            // console.log("Ladder Up",ladderUpPoint)
+            // console.log("Ladder Down",ladderDownPoint)
+
+            // console.log("LeftUp",leftUp);
+            // console.log("leftDown",leftDown);
+            // console.log("topUp",topUp);
+            // console.log("topDown",topDown);
+
+            // console.log("Container Height",containerHeight)
+
+            drawLadder(containerWidth,containerHeight,containerLeft,x1,y1,x2,y2,topUp);
+
         };
 
         //Ladder Drawer
-        function drawLadder(left,top,height,skew){
+        function drawLadder(containerWidth,containerHeight,containerLeft,x1,y1,x2,y2,topUp){
             
             let svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-            let svgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+            let svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
 
-            svgContainer.setAttribute('height',height);
-            svgContainer.setAttribute('width','70px');
-            svgContainer.style.cssText=`position:absolute;left:${left};top:${top};transform:skewX${skew}deg`
+            svgContainer.setAttribute('height',containerHeight);
+            svgContainer.setAttribute('width',containerWidth);
 
-            svgRect.setAttribute('height',height);
-            svgRect.setAttribute('width','70px');
+            svgContainer.style.cssText=`position:absolute;left:${containerLeft};top:${topUp};`
 
-            svgRect.style.cssText = `fill:transparent;stroke:#f00;stroke-width:5px;opacity:0.8;`;
+            svgLine.setAttribute('x1',x1);
+            svgLine.setAttribute('y1',y1);
+            svgLine.setAttribute('x2',x2);
+            svgLine.setAttribute('y2',y2);
             
-            svgContainer.appendChild(svgRect)
+            svgLine.style.cssText = `stroke:rgb(0,255,0);stroke-width:5`;
+            
+            svgContainer.appendChild(svgLine)
             document.getElementsByClassName('snake-ladder-container')[0].appendChild(svgContainer);
         }
     </script>
