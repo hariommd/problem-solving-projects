@@ -123,7 +123,7 @@
         }
 
         //Set Current Move
-        const playerName =  "Player 1";
+        const playerName =  window.prompt("Enter Your Name !") || "Player 1";
         var currentMove = 0;
         playerMove(`box-item${currentMove}`);
 
@@ -223,7 +223,7 @@
             
             if(leftDown>leftUp) {
                     containerLeft = leftUp;
-                    console.log("Container Up",containerLeft)
+                    // console.log("Container Up",containerLeft)
                     x1=0;
                     x2=containerWidth;
                     y1=0;
@@ -231,7 +231,7 @@
                 }
             else{
                     containerLeft = leftDown;
-                    console.log("Container Down",containerLeft)
+                    // console.log("Container Down",containerLeft)
                     x1=containerWidth;
                     x2=0;
                     y1=0;
@@ -274,7 +274,7 @@
             
             if(leftDown>leftUp) {
                     containerLeft = leftUp;
-                    console.log("Container Up",containerLeft)
+                    // console.log("Container Up",containerLeft)
                     x1=0;
                     x2=containerWidth;
                     y1=0;
@@ -282,7 +282,7 @@
                 }
             else{
                     containerLeft = leftDown;
-                    console.log("Container Down",containerLeft)
+                    // console.log("Container Down",containerLeft)
                     x1=containerWidth;
                     x2=0;
                     y1=0;
